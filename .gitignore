@@ -1,0 +1,48 @@
+# Editor/IDE files
+*.swp
+*.swo
+.emacs-project
+\#.#
+*/.#*
+\#*
+.#*
+*~
+*.idea
+
+# OS specific files
+.DS_Store
+
+*.log
+*.pot
+env
+media/*
+
+*.py[co]
+local_settings.py
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Simulation files
+names.txt
+places.txt
+sql_recsys_functions_test.py
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+worldrat.komodoproject
