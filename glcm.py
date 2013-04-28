@@ -74,8 +74,5 @@ class Glcm:
 
 
 x = Glcm('irma/','irma.txt','salida_irma.txt')
-	
-
-
-
+y = Glcm('tramas/','tramas.txt','salida_tramas.txt')
 
