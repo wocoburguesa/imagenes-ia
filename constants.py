@@ -1,0 +1,1 @@
+TAMANO_MATRIZ = 8
