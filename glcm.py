@@ -24,10 +24,6 @@ class Glcm(object):
 
         sal.write(str(glcm_dic))
 
-        prueba = open (out, 'r')
-        prueba = prueba.read()
-        print "Lectura:\n"+prueba
-        
         imgs.close()
 
     def glcm(self, r_img, right, down):
