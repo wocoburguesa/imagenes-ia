@@ -1,57 +1,39 @@
 import cv,cv2,numpy
 import json
 
-import constants
-
 class Glcm(object):
 
     def __init__ (self,path,arch,out):
         imgs = open (arch, 'r')
+        sal = open (out, 'w')
         sal = open (out, 'a')
-        f=0
         linea = imgs.readline().strip()
-        sal.write('{')
+        glcm_dic = {}
 
         while linea != "":
             img_r=self.reducir(
                 cv2.imread(path+linea,
-                           cv.CV_LOAD_IMAGE_GRAYSCALE))
+                cv.CV_LOAD_IMAGE_GRAYSCALE))
             print 'Reducida: ' + path+linea
-            if f==1 : sal.write(',\n')
-            array = [
-                ['nombre',linea],
-                ['glcm',self.toString(self.glcm(img_r,3,1))]
-                ]
-            json.dump(array,sal)
+
+            glcm_dic.update({linea : self.glcm(img_r,3,1)})
 
             print 'Glcm: ' + path+linea + " OK"
+            
             linea = imgs.readline().strip()
-            f=1
-            sal.write('}')
 
-            imgs.close()
+        sal.write(str(glcm_dic))
 
-    def toString(self, img):
-        st = "["
-        mat = cv.fromarray(img)
-        ancho, largo = cv.GetSize(mat)
-
-        for i in range(largo) :
-            st +="["
-            for j in range(ancho) :
-                st +=str(img[i,j])
-                if j != ancho-1 :
-                    st += ","
-                    st+="]"
-                    if i != largo-1 : st += ","
-                    st+="]"
-
-        return st
+        prueba = open (out, 'r')
+        prueba = prueba.read()
+        print "Lectura:\n"+prueba
+        
+        imgs.close()
 
     def glcm(self, r_img, right, down):
         mat =  cv.CreateMat(
-            constants.TAMANO_MATRIZ,
-            constants.TAMANO_MATRIZ,
+            8,
+            8,
             cv.CV_16U
             )
         cv.Set(mat,0)
@@ -81,4 +63,6 @@ class Glcm(object):
         return img
 
 
-x = Glcm('irma/','irma.txt','salida_irma.txt')
+Glcm('irma100/','irma100.txt','salida_irma100_glcm.txt')
+Glcm('tramas100/','tramas100.txt','salida_tramas100_glcm.txt')
+
