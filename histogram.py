@@ -10,22 +10,48 @@ class histogram (object):
 
         self.features = {}
 
+        caracteristicas = []
+        maximo = [0.0]* 7
+        minimo = [999999999.0]*7
+        nombre = []
         while linea != "":
 
             img = cv2.imread(path+linea,cv.CV_LOAD_IMAGE_GRAYSCALE)
             i_histograma, i_tamano = self.f_histogram(img)
             caracteristica = self.get_caracteristicas(i_histograma,i_tamano)
-            print linea
-            salida.write(prex+linea+": "+
-                str(caracteristica[0])+", "+
-                str(caracteristica[1])+", "+
-                str(caracteristica[2])+", "+
-                str(caracteristica[3])+", "+
-                str(caracteristica[4])+", "+
-                str(caracteristica[5])+", "+
-                str(caracteristica[6])+';\n')
-
+            caracteristicas += [caracteristica]
+            nombre += [linea]
             linea = imagenes.readline().strip()
+            
+        for i in range(len(caracteristicas)):
+            for c in range(7):
+                print caracteristicas[i]
+                if caracteristicas[i][c] < minimo[c]:
+                    minimo[c] = caracteristicas [i][c]
+        for i in range(len(caracteristicas)):
+            for c in range(7):
+                caracteristicas[i][c] = caracteristicas[i][c]-(minimo[c])
+        
+        for i in range(len(caracteristicas)):
+            for c in range(7):
+                if caracteristicas[i][c] > maximo[c]:
+                    maximo[c] = caracteristicas [i][c]
+        
+        for i in range(len(caracteristicas)):
+            for c in range(7):
+                caracteristicas[i][c] = caracteristicas[i][c]/float(maximo[c])
+            
+            salida.write(nombre[i] + ": ") 
+            flag = 1
+            for c in range(7):
+                salida.write(str(caracteristicas[i][c]))
+                if (flag == 1): 
+                    salida.write(", ")
+                if c+1 == 6 : flag=0
+                
+            salida.write(";\n")
+        
+            
         imagenes.close()
 
     def get_caracteristicas (self, histograma, tamano):
@@ -96,8 +122,8 @@ class histogram (object):
     def f_sm (self, histograma, stddev):
         return 1-(1/(1+pow(stddev,2)))
 
-histogram('irma100/','irma100.txt','salida_irma_hist100.txt',"")
-histogram('tramas100/','tramas100.txt','salida_tramas_hist100.txt',"")
+histogram('irma100/','irma100.txt','NORMAL_irma100_hist.txt',"")
+histogram('tramas100/','tramas100.txt','NORMAL_tramas100_hist.txt',"")
 
 
 
