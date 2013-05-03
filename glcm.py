@@ -22,7 +22,7 @@ class Glcm(object):
             
             linea = imgs.readline().strip()
 
-        sal.write(str(glcm_dic))
+        sal.write(json.dumps(glcm_dic))
 
         imgs.close()
 
