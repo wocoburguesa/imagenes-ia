@@ -124,6 +124,3 @@ class histogram (object):
 
 histogram('irma100/','irma100.txt','NORMAL_irma100_hist.txt',"")
 histogram('tramas100/','tramas100.txt','NORMAL_tramas100_hist.txt',"")
-
-
-
