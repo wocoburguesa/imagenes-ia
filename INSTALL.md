@@ -22,3 +22,8 @@ $sudo cmake
       ..
 
 - Asegurar que { INSTALACION DE PYTHON } sea el mismo que el que se comprobó a la hroa de crear el env
+
+Para instalar en Ubuntu:
+
+$sudo apt-get update
+$sudo apt-get install opencv python-opencv
