@@ -1,13 +1,13 @@
 Archivos de salida:
 
--NORMAL_irma100_hist.txt:
+    -NORMAL_irma100_hist.txt:
     Salida de 100 imagenes de la carpeta irma100 Normalizada utilizando Histograma
--NORMAL_tramas100_hist.txt
+    -NORMAL_tramas100_hist.txt
     Salida de 100 imagenes de la carpeta tramas100 Normalizada utilizando Histograma
     
--irma_glcm_features.txt:
+    -irma_glcm_features.txt:
     Salida de 100 imagenes de la carpeta irma100 Normalizada utilizando GLCM
--tramas_glcm_features.txt:
+    -tramas_glcm_features.txt:
     Salida de 100 imagenes de la carpeta tramas100 Normalizada utilizando CLCM
     
     *Los demas archivos son necesarios para la generacion de estos archivos
