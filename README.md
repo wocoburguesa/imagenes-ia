@@ -12,7 +12,7 @@ Archivos de salida:
     
     *Los demas archivos son necesarios para la generacion de estos archivos
 
-Para ejeutar el codigo:
+Para ejecutar el codigo:
 
     -Ejecutar $python main.py
     
