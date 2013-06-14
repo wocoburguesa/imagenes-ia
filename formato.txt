@@ -1,1 +1,0 @@
-XXX_NOMBRE: CAR1, CAR2, ... CARX;

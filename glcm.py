@@ -1,80 +1,246 @@
-import cv,cv2,numpy
 import json
 
-class Glcm:
-    def __init__ (self,path,arch,out):
-        imgs = open (arch, 'r')
-        sal = open (out, 'w')
-        sal = open (out, 'a')
-        f=0
-        linea = imgs.readline().strip()
-        sal.write('[')
+import cv, cv2, numpy
 
-        while linea != "":
-            img_r=self.reducir(
-                cv2.imread(path+linea,
-                           cv.CV_LOAD_IMAGE_GRAYSCALE))
-            print 'Reducida: ' + path+linea
-            if f==1 : sal.write(',\n')
-            array = [
-                ['nombre',linea],
-                ['glcm',self.toString(self.glcm(img_r,3,1))]
-                ]
-            json.dump(array,sal)
+import constants
 
-            print 'Glcm: ' + path+linea + " OK"
-            linea = imgs.readline().strip()
-            f=1
-            
-        sal.write(']')
+class GLCMFeatureExtractor(object):
+    def __init__(self):
+        pass
 
-        imgs.close()
+    def idm_single(self, glcm):
+        idm = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                idm += a / float(1 + (i - j) ** 2)
+                j += 1
+            i += 1
 
-    def toString(self, img):
-        st = "["
-        mat = cv.fromarray(img)
-        ancho, largo = cv.GetSize(mat)
-        for i in range(largo) :
-            st +="["
-            for j in range(ancho) :
-                st +=str(img[i,j])
-                if j != ancho-1 : st += ","
-            st+="]"
-            if i != largo-1 : st += ","
-        st+="]"
-        return st
+        return idm
 
-    def glcm(self, r_img, right, down):
-        mat =  cv.CreateMat(
-            8,
-            8,
-            cv.CV_16U
+    def dissimilarity_single(self, glcm):
+        dissimilarity = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                dissimilarity += abs(i-j) * a
+                j += 1
+            i += 1
+
+        return dissimilarity
+
+    def homogeinity_single(self, glcm):
+        homogeinity = 0
+        row_total = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                row_total += a
+                homogeinity += row_total/(1 + (i - j)**2)
+                j += 1
+            i += 1
+
+        return homogeinity
+
+    def idm_norm_single(self, glcm):
+        idm_norm = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                idm_norm += a/(1 + (i-j)**2/constants.GRAY_LEVELS**2)
+                j += 1
+            i += 1
+
+        return idm_norm
+
+    def id_norm_single(self, glcm):
+        id_norm = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                id_norm += a/(1 + abs(i-j)/constants.GRAY_LEVELS)
+                j += 1
+            i += 1
+
+        return id_norm
+
+    def asm_single(self, glcm):
+        asm = 0
+        i = 0
+        j = 0
+        for row in glcm:
+            for a in row:
+                asm += a**2
+                j += 1
+            i += 1
+
+        return asm
+
+    def sa_single(self, glcm):
+        sa = 0
+        i = 0
+        j = 0
+        for idx in range(len(glcm)*2):
+            pxy = 0
+            i = 0
+            j = 0
+            for row in glcm:
+                for a in row:
+                    if i + j == idx:
+                        pxy += a
+                    j += 1
+                i +=1
+
+            sa += idx * pxy
+
+        return sa
+
+    def sv_single(self, glcm):
+        sv = 0
+        i = 0
+        j = 0
+        for idx in range(len(glcm)*2):
+            pxy = 0
+            i = 0
+            j = 0
+            for row in glcm:
+                for a in row:
+                    if i + j == idx:
+                        pxy += a
+                    j += 1
+                i +=1
+
+            sv += ((idx - self.id_norm_single(glcm))**2) * pxy
+
+        return sv
+
+    @staticmethod
+    def normalize_data(data):
+        maxi = max(data.values())
+        print maxi
+        for key in data.keys():
+            data[key] /= float(maxi)
+
+    def make_feature_vector(self, glcm):
+        features = {}
+        features['idm'] = self.idm_single(glcm)
+        features['dissimilarity'] = self.dissimilarity_single(glcm)
+        features['homogeinity'] = self.homogeinity_single(glcm)
+        features['idm_norm'] = self.idm_norm_single(glcm)
+        features['id_norm'] = self.id_norm_single(glcm)
+        features['asm'] = self.asm_single(glcm)
+        features['sa'] = self.sa_single(glcm)
+        features['sv'] = self.sv_single(glcm)
+        return features
+
+    def __repr__(self):
+        return json.dumps(self.glcm_data)
+
+class Glcm(object):
+    def __init__(self, rows=None, cols=None,
+                 down=None, right=None,
+                 reduce_factor=None):
+        if rows:
+            self.rows = rows
+        else:
+            self.rows = constants.GLCM_DEFAULT_ROWS
+
+        if cols:
+            self.cols = cols
+        else:
+            self.cols = constants.GLCM_DEFAULT_COLS
+
+        if down:
+            self.down = down
+        else:
+            self.down = constants.GLCM_DEFAULT_DOWN
+
+        if right:
+            self.right = right
+        else:
+            self.right = constants.GLCM_DEFAULT_RIGHT
+
+        if reduce_factor:
+            self.reduce_factor = reduce_factor
+        else:
+            self.reduce_factor = constants.GLCM_REDUCE_FACTOR
+
+        self.feature_extractor = GLCMFeatureExtractor()
+
+    def get_features_single(self, img):
+        img = cv2.imread(
+            img,
+            cv.CV_LOAD_IMAGE_GRAYSCALE
             )
-        cv.Set(mat,0)
 
-        m = numpy.asarray(mat)
-        ancho, largo = cv.GetSize(cv.fromarray(r_img))
+        glcm = self.glcm(self.reduce(img))
 
-        for i in range(largo) :
-            for j in range(ancho) :
-                fila = r_img[i,j]
-                columna = r_img[
-                    (i+down)%largo,
-                    (j+right)%ancho
-                    ]
-                m[fila, columna] += 1
+        return self.feature_extractor.make_feature_vector(glcm)
 
-        return m
 
-    def reducir(self, img):
-        mat = cv.fromarray(img)
-        ancho, largo = cv.GetSize(mat)
+    def get_features_multiple(self, imglist):
+        imglist = open(imglist, 'r')
+        imgfiles = [f.strip() for f in imglist.readlines()]
+        imglist.close()
 
-        for i in range(largo) :
-            for j in range(ancho) :
-                img[i,j] /= 32
+        features_dict = {}
 
-        return img
+        counter = 1
+        total = len(imgfiles)
 
-Glcm('tramas100/','tramas100.txt','final_salida_tramas100_glcm.txt')
+        for image in imgfiles:
+            print 'Extracting features for {file}. {current} out of {total}'.format(
+                file=image,
+                current=counter,
+                total=total
+                )
+            image_name = image.split('/')[1]
+            image = cv2.imread(
+                image,
+                cv.CV_LOAD_IMAGE_GRAYSCALE
+                )
 
+            glcm = self.glcm(self.reduce(image))
+
+            features_dict[image_name] = self.feature_extractor.make_feature_vector(glcm)
+            counter +=1
+
+        return features_dict
+
+
+    def glcm(self, r_img):
+        glcm_mat = [[ 0 for col in range(self.cols)] for row in range(self.rows)]
+
+        total = 0
+
+        for i in range(self.img_rows) :
+            for j in range(self.img_cols) :
+                row = r_img[i][j]
+                column = r_img[(i+self.down)%self.img_rows][(j+self.right)%self.img_cols]
+                glcm_mat[row][column] += 1
+                total += 1
+
+        for i in range(self.rows) :
+            for j in range(self.cols) :
+                glcm_mat[i][j] = glcm_mat[i][j]/float(total)
+
+        return glcm_mat
+
+    def reduce(self, img):
+        mat = list(img)
+        self.img_matrix = [list(row) for row in mat]
+
+        self.img_rows = len(self.img_matrix)
+        self.img_cols = len(self.img_matrix[0])
+
+        for i in range(self.img_rows):
+            for j in range(self.img_cols):
+                mat[i][j] /= constants.GLCM_REDUCE_FACTOR
+
+        return mat

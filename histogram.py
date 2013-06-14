@@ -22,7 +22,7 @@ class histogram (object):
             caracteristicas += [caracteristica]
             nombre += [linea]
             linea = imagenes.readline().strip()
-            
+
         for i in range(len(caracteristicas)):
             for c in range(7):
                 print caracteristicas[i]
@@ -31,27 +31,27 @@ class histogram (object):
         for i in range(len(caracteristicas)):
             for c in range(7):
                 caracteristicas[i][c] = caracteristicas[i][c]-(minimo[c])
-        
+
         for i in range(len(caracteristicas)):
             for c in range(7):
                 if caracteristicas[i][c] > maximo[c]:
                     maximo[c] = caracteristicas [i][c]
-        
+
         for i in range(len(caracteristicas)):
             for c in range(7):
                 caracteristicas[i][c] = caracteristicas[i][c]/float(maximo[c])
-            
-            salida.write(nombre[i] + ": ") 
+
+            salida.write(nombre[i] + ": ")
             flag = 1
             for c in range(7):
                 salida.write(str(caracteristicas[i][c]))
-                if (flag == 1): 
+                if (flag == 1):
                     salida.write(", ")
                 if c+1 == 6 : flag=0
-                
+
             salida.write(";\n")
-        
-            
+
+
         imagenes.close()
 
     def get_caracteristicas (self, histograma, tamano):
@@ -105,7 +105,7 @@ class histogram (object):
         for i in range(len(histograma)):
             kurtosis+= pow (histograma[i]-mean,4) * vector_P[i]
         return (1/pow(stddev,4))*kurtosis
-        
+
     def f_energy (self, histograma, vector_P):
         energy = 0
         for i in range(len(histograma)):
