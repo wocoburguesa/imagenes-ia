@@ -16,6 +16,7 @@ if __name__ == '__main__':
         )
 
     a = extractor.GLCMFeatureExtractor('final_salida_tramas100_glcm.txt')
+
     a.idm_all()
     a.dissimilarity_all()
     a.homogeinity_all()
@@ -27,6 +28,7 @@ if __name__ == '__main__':
     a.normalize_all()
     a.make_feature_vectors()
     a.dump('tramas_glcm_features.txt')
+
 
     a = extractor.GLCMFeatureExtractor('final_salida_irma100_glcm.txt')
     a.idm_all()

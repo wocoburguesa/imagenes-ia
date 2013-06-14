@@ -1,4 +1,29 @@
-Para instalar OpenCV en mac con virtualenv:
+Archivos de salida:
+
+    -NORMAL_irma100_hist.txt:
+    Salida de 100 imagenes de la carpeta irma100 Normalizada utilizando Histograma
+    -NORMAL_tramas100_hist.txt
+    Salida de 100 imagenes de la carpeta tramas100 Normalizada utilizando Histograma
+    
+    -irma_glcm_features.txt:
+    Salida de 100 imagenes de la carpeta irma100 Normalizada utilizando GLCM
+    -tramas_glcm_features.txt:
+    Salida de 100 imagenes de la carpeta tramas100 Normalizada utilizando CLCM
+    
+    *Los demas archivos son necesarios para la generacion de estos archivos
+
+Para ejecutar el codigo:
+
+    -Ejecutar $python main.py
+    
+    *Solo se necesita instalar OpnenCV para Python (En la parte inferior las instrucciones para MAc o Ubuntu)
+
+Para instalar OpenCV en Ubuntu:
+
+$sudo apt-get update
+$sudo apt-get install opencv python-opencv
+
+Para instalar OpenCV en Mac con virtualenv:
 
 - Comprobar las instalaciones de Python:
   * La que viene por defecto con mac está en /System/Library/etcetera
@@ -23,7 +48,3 @@ $sudo cmake
 
 - Asegurar que { INSTALACION DE PYTHON } sea el mismo que el que se comprobó a la hroa de crear el env
 
-Para instalar en Ubuntu:
-
-$sudo apt-get update
-$sudo apt-get install opencv python-opencv
