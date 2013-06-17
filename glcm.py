@@ -1,4 +1,4 @@
-import json
+import json, math
 
 import cv, cv2, numpy
 
@@ -8,7 +8,30 @@ class GLCMFeatureExtractor(object):
     def __init__(self):
         pass
 
-    def idm_single(self, glcm):
+    def contrast(self, glcm):
+        contrast = 0
+        for i in range(len(glcm)):
+            inner_sum = 0
+            for j in range(len(glcm)):
+                for k in range(len(glcm)):
+                    if abs(k-j) == i:
+                        inner_sum += glcm[j][k]
+            contrast += (i**2) * inner_sum
+
+        return contrast
+
+    def entropy(self, glcm):
+        entropy = 0
+        for i in range(len(glcm)):
+            for j in range(len(glcm)):
+                entropy += glcm[i][j] * math.log(glcm[i][j], 2)
+
+        return entropy
+
+    def correlation(self, glcm):
+        pass
+
+    def idm(self, glcm):
         idm = 0
         i = 0
         j = 0
@@ -20,7 +43,7 @@ class GLCMFeatureExtractor(object):
 
         return idm
 
-    def dissimilarity_single(self, glcm):
+    def dissimilarity(self, glcm):
         dissimilarity = 0
         i = 0
         j = 0
@@ -32,7 +55,7 @@ class GLCMFeatureExtractor(object):
 
         return dissimilarity
 
-    def homogeinity_single(self, glcm):
+    def homogeinity(self, glcm):
         homogeinity = 0
         row_total = 0
         i = 0
@@ -46,7 +69,7 @@ class GLCMFeatureExtractor(object):
 
         return homogeinity
 
-    def idm_norm_single(self, glcm):
+    def idm_norm(self, glcm):
         idm_norm = 0
         i = 0
         j = 0
@@ -58,7 +81,7 @@ class GLCMFeatureExtractor(object):
 
         return idm_norm
 
-    def id_norm_single(self, glcm):
+    def id_norm(self, glcm):
         id_norm = 0
         i = 0
         j = 0
@@ -70,7 +93,7 @@ class GLCMFeatureExtractor(object):
 
         return id_norm
 
-    def asm_single(self, glcm):
+    def asm(self, glcm):
         asm = 0
         i = 0
         j = 0
@@ -82,7 +105,7 @@ class GLCMFeatureExtractor(object):
 
         return asm
 
-    def sa_single(self, glcm):
+    def sa(self, glcm):
         sa = 0
         i = 0
         j = 0
@@ -101,7 +124,7 @@ class GLCMFeatureExtractor(object):
 
         return sa
 
-    def sv_single(self, glcm):
+    def sv(self, glcm):
         sv = 0
         i = 0
         j = 0
@@ -116,7 +139,7 @@ class GLCMFeatureExtractor(object):
                     j += 1
                 i +=1
 
-            sv += ((idx - self.id_norm_single(glcm))**2) * pxy
+            sv += ((idx - self.id_norm(glcm))**2) * pxy
 
         return sv
 
@@ -129,14 +152,14 @@ class GLCMFeatureExtractor(object):
 
     def make_feature_vector(self, glcm):
         features = {}
-        features['idm'] = self.idm_single(glcm)
-        features['dissimilarity'] = self.dissimilarity_single(glcm)
-        features['homogeinity'] = self.homogeinity_single(glcm)
-        features['idm_norm'] = self.idm_norm_single(glcm)
-        features['id_norm'] = self.id_norm_single(glcm)
-        features['asm'] = self.asm_single(glcm)
-        features['sa'] = self.sa_single(glcm)
-        features['sv'] = self.sv_single(glcm)
+        features['idm'] = self.idm(glcm)
+        features['dissimilarity'] = self.dissimilarity(glcm)
+        features['homogeinity'] = self.homogeinity(glcm)
+        features['idm_norm'] = self.idm_norm(glcm)
+        features['id_norm'] = self.id_norm(glcm)
+        features['asm'] = self.asm(glcm)
+        features['sa'] = self.sa(glcm)
+        features['sv'] = self.sv(glcm)
         return features
 
     def __repr__(self):
@@ -173,7 +196,7 @@ class Glcm(object):
 
         self.feature_extractor = GLCMFeatureExtractor()
 
-    def get_features_single(self, img):
+    def get_features(self, img):
         img = cv2.imread(
             img,
             cv.CV_LOAD_IMAGE_GRAYSCALE
