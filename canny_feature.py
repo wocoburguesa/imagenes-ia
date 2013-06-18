@@ -172,23 +172,23 @@ def edge_histogram(canny):
                 elif total == 4:
                     histogram['white'] += 1
                 else:
-                    coeff_v = abs([coeffs['v'][i]*levels[i] for i in range(4)])
+                    coeff_v = abs(sum(([coeffs['v'][i]*levels[i] for i in range(4)])))
                     if coeff_v == 2:
                         histogram['v'] += 1
 
-                    coeff_h = abs([coeffs['h'][i]*levels[i] for i in range(4)])
+                    coeff_h = abs(sum(([coeffs['h'][i]*levels[i] for i in range(4)])))
                     if coeff_h == 2:
                         histogram['h']
 
-                    coeff_d_45 = abs([coeffs['d45'][i]*levels[i] for i in range(4)])
+                    coeff_d_45 = abs(sum(([coeffs['d45'][i]*levels[i] for i in range(4)])))
                     if coeff_d_45 == 2:
                         histogram['d45'] += 1
 
-                    coeff_d_135 = abs([coeffs['d135'][i]*levels[i] for i in range(4)])
+                    coeff_d_135 = abs(sum(([coeffs['d135'][i]*levels[i] for i in range(4)])))
                     if coeff_d_135 == 2:
                         histogram['d135'] += 1
 
     return histogram
 
 if __name__ == '__main__':
-    edge_histogram(canny('tramas100/COX_1891.jpg'))
+    edge_histogram(canny('irma100/COX_1891.jpg'))
