@@ -6,3 +6,11 @@ GLCM_DEFAULT_COLS = 8
 GLCM_DEFAULT_DOWN = 1
 GLCM_DEFAULT_RIGHT = 3
 GLCM_REDUCE_FACTOR = 32
+
+IRMA_CATS = {
+    'COX': 1,
+    'HAN': 2,
+    'HEA': 3,
+    'KNE': 4,
+    'NEC': 5
+    }
