@@ -27,5 +27,5 @@ class Pexifier(object):
                 target_file.write('%s; ' % json_dict[key][i])
             if irma:
                 target_file.write('%s\n' % constants.IRMA_CATS[key.split('_')[0]])
-            else
+            else:
                 target_file.write('%s\n' % int(key[1:3]))
