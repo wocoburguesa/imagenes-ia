@@ -363,6 +363,12 @@ angular.module('myApp.controllers', []).
             });
 
             $scope.$watch('currentMethod', function () {
+                $scope.currentPreview = '';
                 $scope.run($scope.currentFilename);
+            });
+
+            $scope.$watch('currentDataset', function () {
+                $scope.results.length = 0;
+                $scope.currentFilename = '';
             });
         }]);
