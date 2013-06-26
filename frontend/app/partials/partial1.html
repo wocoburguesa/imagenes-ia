@@ -1,0 +1,54 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="brand" href="#">CBIR</a>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" ng-model="currentDataset" btn-radio="'irma'">IRMA</button>
+            <button type="button" class="btn btn-primary" ng-model="currentDataset" btn-radio="'tramas'">Tramas</button>
+          </div>
+          <li class="nav-header">Buscar</li>
+          <li>
+            <input type="text" ng-model="currentFilename" typeahead="filename for filename in files[currentDataset] | filter:$viewValue">
+          </li>
+          <li class="nav-header">Imagen original</li>
+          <li><img src="img/{{ currentDataset }}100/{{ currentFilename }}"></img></li>
+          <li class="nav-header">Resultados</li>
+          <li ng-repeat="result in results">
+            <a ng-click="setCurrentPreview(result.filename)">{{ result.filename }}</a>
+          </li>
+        </ul>
+      </div><!--/.well -->
+    </div><!--/span-->
+
+    <div class="span9">
+      <div class="hero-unit">
+        <h1 ng-show="!!currentPreview">{{ currentPreview }}</h1>
+        <h2 ng-show="!currentPreview">Selecciona una imagen</h2>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" ng-model="currentMethod" btn-radio="'glcm'">GLCM</button>
+          <button type="button" class="btn btn-primary" ng-model="currentMethod" btn-radio="'histogram'">Histograma</button>
+          <button type="button" class="btn btn-primary" ng-model="currentMethod" btn-radio="'canny'">Canny</button>
+        </div>
+        <hr />
+        <hr />
+        <img src="img/{{ currentDataset }}100/{{ currentPreview }}" ng-show="!!currentPreview"/>
+      </div>
+    </div><!--/span-->
+  </div><!--/row-->
+
+  <hr>
+
+  <footer>
+    <p>&copy; wocoburguesa 2013</p>
+  </footer>
+
+</div>
